@@ -89,10 +89,10 @@ const News = () => {
                                             style={styles.image}
                                         />
                                         <View style={styles.details}>
-                                            <Text style={styles.productName}>{item?.source?.name}</Text>
+                                            <Text numberOfLines={1} style={styles.productName}>{item?.source?.name}</Text>
                                         </View>
                                         <View style={styles.pricweDetails}>
-                                            <Text style={styles.priceName}>{item?.author}</Text>
+                                            <Text numberOfLines={1} style={styles.priceName}>{item?.author}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 </View>
