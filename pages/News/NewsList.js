@@ -1,14 +1,23 @@
-import { StyleSheet, View } from 'react-native'
-import React from 'react'
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import WebView from 'react-native-webview';
 
 const NewsList = ({ route }) => {
     const { article } = route.params;
-
-    console.log(article?.url, 'SELEDDJNDND')
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        setTimeout(() => setLoading(false), 4000);
+    }, []);
     return (
         <View style={styles.container}>
-            <WebView source={{ uri: article?.url }} />
+            {loading ? (
+                <View style={styles.footer}>
+                    <ActivityIndicator size="large" color="black" />
+                    <Text style={{ color: 'black', fontSize: 15 }}>Loading....</Text>
+                </View>
+            ) : (
+                <WebView source={{ uri: article?.url }} />
+            )}
         </View>
     )
 }
@@ -19,4 +28,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
+    footer: {
+        paddingVertical: 300,
+        justifyContent: "center",
+        alignItems: "center",
+    }
 })
+

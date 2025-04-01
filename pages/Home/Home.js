@@ -1,78 +1,102 @@
-import { ActivityIndicator, Image, Pressable, SafeAreaView, StyleSheet, Text, TextInput, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from "react";
+import { View, Text, TextInput, Button, StyleSheet, SafeAreaView, Pressable, Image, ScrollView } from "react-native";
+// import { API_KEY } from "@env"; // Import API key from .env file
 import Search from "react-native-vector-icons/EvilIcons"
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import Entypo from "react-native-vector-icons/Entypo"
 import Feather from "react-native-vector-icons/Feather"
-// import Geolocation from "react-native-geolocation-service";
-const API_KEY = "b284e3824bd94c6e9096f91b5028184d";
+const API_KEY = '831807616580c7aad18be484cb42ff9f'
 
 const Home = () => {
-  const [city, setCity] = useState("");
+  const [city, setCity] = useState("Chennai");
   const [weather, setWeather] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  // console.log(weather, 'WEATHER');
-  console.log(weather, 'WEATHER')
-
   const fetchWeather = async () => {
-    if (!city.trim()) return; // Don't fetch if city input is empty
-    setLoading(true);
     try {
       const response = await fetch(
-        `https://api.openweathermap.org/data/3.0/weather?q=${city}&appid=${API_KEY}&units=metric`
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
       );
       const data = await response.json();
-      if (data.cod === 200) {
+      if (response.ok) {
         setWeather(data);
       } else {
+        alert("City not found!");
         setWeather(null);
       }
     } catch (error) {
       console.error("Error fetching weather:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  return (
-    <>
-      <SafeAreaView>
-        <View style={styles.main}>
-          <TextInput
-            style={styles.search}
-            placeholder="Search city"
-            placeholderTextColor={"white"}
-            onChangeText={(text) => setCity(text)}
-            value={city}
-          // onSubmitEditing={() => ''}
-          />
-          <Pressable
-            style={styles.buttonSearch}
-            onPress={() => fetchWeather()}
-          // disabled={isPending}
-          >
-            {/* <Feather name="search" size={26} color="white" /> */}
-            <Search name='search' size={26} color="white" />
-          </Pressable>
-        </View>
-        {loading && <ActivityIndicator size="large" color="#00f" />}
+  useEffect(() => {
+    fetchWeather();
+  }, []);
 
+  const parseImageUrl = useCallback(
+    () => {
+      const icon = weather?.weather[0].icon ;
+      if (icon === "01d" || icon === "01n") {
+        return require("../../assets/clear.png");
+      } else if (icon === "02d" || icon === "02n") {
+        return require("../../assets/cloud.png");
+      } else if (icon === "03d" || icon === "03n") {
+        return require("../../assets/cloud.png");
+      } else if (icon === "04d" || icon === "04n") {
+        return require("../../assets/drizzle.png");
+      } else if (icon === "09d" || icon === "09n") {
+        return require("../../assets/rain.png");
+      } else if (icon === "10d" || icon === "10n") {
+        return require("../../assets/rain.png");
+      } else if (icon === "11d" || icon === "11n") {
+        return require("../../assets/rain.png");
+      } else if (icon === "13d" || icon === "13n") {
+        return require("../../assets/snow.png");
+      } else if (icon === "50d" || icon === "50n") {
+        return require("../../assets/mist.png");
+      }
+
+    },
+    [weather]
+  )
+
+  const formattedTime = weather?.dt
+    ? new Date(weather.dt * 1000).toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    })
+    : "";
+
+  return (
+
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#1E293B' }}>
+      <View style={styles.main}>
+        <TextInput
+          style={styles.search}
+          placeholder="Search city"
+          placeholderTextColor={"white"}
+          onChangeText={(text) => setCity(text)}
+          value={city}
+        />
+        <Pressable
+          style={styles.buttonSearch}
+          onPress={() => fetchWeather()}>
+          <Search name='search' size={35} color="white" />
+        </Pressable>
+      </View>
+      <ScrollView>
         <View style={styles.totalView}>
           <Image
-            // source={parseImageUrl()}
-            // source={require('../../assets/cloud.png')}
+            source={parseImageUrl()}
             style={styles.box}
             resizeMode="stretch"
           />
           <View style={styles.weather}>
             <Text style={styles.weatherText}>
-              {/* {Math.floor(weatherData?.main.temp as number)} °C */}
-              31°C
+              {weather?.main?.temp}°C
+              {/* 31°C */}
             </Text>
             <Text style={styles.weatherCity}>
-              {/* {city || "Delhi"} */}
-              Chennai
+              {weather?.name}
             </Text>
           </View>
 
@@ -81,8 +105,7 @@ const Home = () => {
               <FontAwesome5 name="temperature-high" size={22} color="white" />
               <View>
                 <Text style={styles.txt}>
-                  {/* {weatherData?.main.feels_like}% */}
-                  50%
+                  {weather?.main?.feels_like}
                 </Text>
                 <Text style={styles.text}>Feels Like</Text>
               </View>
@@ -91,8 +114,7 @@ const Home = () => {
               <Entypo name="air" size={22} color="white" />
               <View>
                 <Text style={styles.Humtext}>
-                  {/* {weatherData?.main.humidity}% */}
-                  40%
+                  {weather?.main.humidity}%
                 </Text>
                 <Text style={styles.textHu}>Humidity</Text>
               </View>
@@ -101,21 +123,44 @@ const Home = () => {
               <Feather name="wind" size={22} color="white" />
               <View>
                 <Text style={styles.windtext}>
-                  {/* {weatherData?.wind.speed} kmph */}
-                  25KM
+                  {weather?.wind.speed} kmph
                 </Text>
                 <Text style={styles.windhead}>Wind Speed</Text>
               </View>
             </View>
           </View>
         </View>
-      </SafeAreaView>
-    </>
+        <View style={styles.ListContainer}>
+          <Text style={styles.textHorly}>
+            Hourly Forecast
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.containerScroll}
+          >
+            <View
+              style={styles.containerHourly}
+            >
+              <Image
+                source={parseImageUrl() }
+                style={styles.boxHourly}
+                resizeMode="stretch"
+              />
+              <View style={styles.textDeg}>
+                <Text style={styles.textHorly}>
+                  {Math.floor(weather?.main?.temp)}°C
+                </Text>
+                <Text style={styles.textCol}>{formattedTime}</Text>
+              </View>
+            </View>
+          </ScrollView>
 
-  )
-}
-
-export default Home
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -123,13 +168,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E293B',
   },
   main: {
+    backgroundColor: '#1E293B',
     paddingHorizontal: 16,
     paddingTop: 12,
     flexDirection: 'row',
-    columnGap: 16,
+    columnGap: 15,
     alignItems: 'center',
   },
   search: {
+
     borderWidth: 1,
     borderColor: '#fff',
     paddingHorizontal: 20,
@@ -140,21 +187,22 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonSearch: {
-    backgroundColor: '#172554',
-    padding: 8,
+    backgroundColor: '#1E293B',
+    // padding: 8,
     borderRadius: 9999,
   },
   totalView: {
-    rowGap: 24,
+    rowGap: 30,
     alignItems: 'center',
     backgroundColor: '#1E293B',
   },
   box: {
-    width: 192,  // w-48 -> 48 * 4px = 192px
-    height: 192, // h-48 -> 48 * 4px = 192px
+    width: 192,
+    height: 192,
+    top: 20
   },
   weather: {
-    rowGap: 12,
+    // rowGap: 12,
     alignItems: 'center'
   },
   weatherText: {
@@ -179,23 +227,23 @@ const styles = StyleSheet.create({
     columnGap: 16,
   },
   txt: {
-    fontWeight: '500', // font-medium
-    color: '#FFFFFF',  // text-white
+    fontWeight: '500',
+    color: '#FFFFFF',
     fontSize: 18,
   },
   text: {
-    color: '#FFFFFF', // text-white
-    fontSize: 12,     // text-xs -> 12px
+    color: '#FFFFFF',
+    fontSize: 12,
   },
   containerHum: {
-    flexDirection: 'row', // flex-row
-    alignItems: 'center', // items-center
-    columnGap: 16,        // gap-x-4 -> 4 * 4px = 16px (React Native 0.71+)
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 16,
   },
   Humtext: {
-    fontWeight: '500', // font-medium
-    color: '#FFFFFF',  // text-white
-    fontSize: 18,      // text-lg -> 18px
+    fontWeight: '500',
+    color: '#FFFFFF',
+    fontSize: 18,
   },
   textHu: {
     color: '#FFFFFF',
@@ -246,4 +294,51 @@ const styles = StyleSheet.create({
     flex: 1
 
   },
-})
+
+  ListContainer: {
+    backgroundColor: '#1E293B',
+    paddingHorizontal: 12,
+    marginTop: 16,
+    gap: 15,
+    flexDirection: "column",
+  },
+  textHorly: {
+    color: "#ffffff",
+    fontSize: 20,
+    fontWeight: "600",
+    marginLeft: 6,
+  },
+  containerScroll: {
+    // paddingHorizontal: 12,
+    // paddingVertical: 16,
+    // marginTop: 16,
+    // gap: 20,
+  },
+  containerHourly: {
+    width: 176, 
+    height: 176,
+    backgroundColor: "#1e3a8a",
+    borderRadius: 12, 
+    alignItems: "center",
+    justifyContent: "center", 
+    gap: 6,
+  },
+  boxHourly: {
+    width: 80,
+    height: 80, 
+  },
+  textDeg: {
+    alignItems: "center", 
+    gap: 4, 
+  },
+  textHorly: {
+    color: "#ffffff", 
+    fontSize: 24, 
+    fontWeight: "bold", 
+  },
+  textCol: {
+    color: "#d1d5db", 
+  },
+});
+
+export default Home;

@@ -1,6 +1,4 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-
 
 const styles = StyleSheet.create({
     container: {
@@ -10,7 +8,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#fcf9f0',
         flex: 1,
-        padding: 3
+        // padding: 3
     },
 
     imgContainer: {
@@ -78,6 +76,45 @@ const styles = StyleSheet.create({
         height: '100%',
         paddingHorizontal: 15,
         color: 'black'
+    },
+    // totalView: {
+    //     paddingBottom: 60
+    // },
+    footer: {
+        paddingVertical: 300,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    main: {
+        backgroundColor: '#1E293B',
+        paddingHorizontal: 16,
+        paddingTop: 15,
+        flexDirection: 'row',
+        columnGap: 15,
+        alignItems: 'center',
+    },
+    search: {
+        borderWidth: 1,
+        borderColor: '#fff',
+        paddingHorizontal: 20,
+        paddingVertical: 8,
+        borderRadius: 20,
+        width: '87%',
+        color: '#FFFFFF',
+        textAlign: 'center',
+        bottom: 8
+    },
+    buttonSearch: {
+        backgroundColor: '#1E293B',
+        // padding: 0,
+        bottom: 8,
+        borderRadius: 9999,
+    },
+    noData: {
+        textAlign: "center",
+        marginTop: 250,
+        fontSize: 16,
+        color: "gray",
     },
 })
 

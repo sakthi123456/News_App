@@ -6,6 +6,8 @@ import Home from '../pages/Home/Home';
 import Entypo from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import News from '../pages/News/News';
+import Profile from '../pages/Profile/Profile';
+import IconMan from 'react-native-vector-icons/Octicons';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -66,6 +68,16 @@ const BottomTabNavigation = () => {
                         return <>
                             <Entypo name={focused ? "news" : "news"} size={22} color={focused ? '#872341' : 'black'} />
                             <Text style={{ color: focused ? '#872341' : 'black', fontWeight: '600', fontSize: 12 }} >News</Text>
+                        </>
+                    }
+                }} />
+                <Tab.Screen name="Profile" component={Profile}
+                options={{
+                    headerShown: false,
+                    tabBarIcon: ({ focused }) => {
+                        return <>
+                            <IconMan name={focused ? "person" : "person"} size={22} color={focused ? '#872341' : 'black'} />
+                            <Text style={{ color: focused ? '#872341' : 'black', fontWeight: '600', fontSize: 12 }} >Profile</Text>
                         </>
                     }
                 }} />

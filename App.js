@@ -5,13 +5,12 @@
  * @format
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BottomTabNavigation from './navigation/BottomTabNavigation';
 import NewsList from './pages/News/NewsList';
 import News from './pages/News/News';
-
 const Stack = createNativeStackNavigator();
 
 function App() {
