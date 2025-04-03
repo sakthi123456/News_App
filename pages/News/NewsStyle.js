@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 
 const styles = StyleSheet.create({
     container: {
@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: '#fcf9f0',
         flex: 1,
-        // padding: 3
     },
 
     imgContainer: {
@@ -96,13 +95,15 @@ const styles = StyleSheet.create({
     search: {
         borderWidth: 1,
         borderColor: '#fff',
-        paddingHorizontal: 20,
-        paddingVertical: 8,
+        paddingHorizontal: 100,
+        paddingVertical: 0,
         borderRadius: 20,
         width: '87%',
         color: '#FFFFFF',
         textAlign: 'center',
-        bottom: 8
+        alignItems: 'center',
+        bottom: 8,
+        height: 45,
     },
     buttonSearch: {
         backgroundColor: '#1E293B',
